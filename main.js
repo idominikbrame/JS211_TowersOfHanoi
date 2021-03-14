@@ -2,6 +2,7 @@
 
 const assert = require('assert');
 const readline = require('readline');
+const { start } = require('repl');
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout
@@ -15,12 +16,14 @@ const rl = readline.createInterface({
       // * Each number represents the largest to smallest tokens: 
         // * 4 is the largest, 
         // * 1 is the smallest
-
+let startStack;
+let endStack;
 let stacks = {
   a: [4, 3, 2, 1],
   b: [],
   c: []
 };
+
 
 // Start here. What is this function doing?
 const printStacks = () => {
@@ -29,28 +32,50 @@ const printStacks = () => {
   console.log("c: " + stacks.c);
 }
 
-// Next, what do you think this function should do?
-const movePiece = () => {
-  // Your code here
+let popped;
 
+// Next, what do you think this function should do?
+const movePiece = (startStack, endStack) => {
+  if (!isLegal(startStack, endStack)) {console.log("illegal move"); return}
+  let popped = stacks[startStack].pop()
+  stacks[endStack].push(popped)
+  checkForWin()
 }
 
 // Before you move, should you check if the move it actually allowed? Should 3 be able to be stacked on 2
-const isLegal = () => {
-  // Your code here
-
+const isLegal = (startStack, endStack) => {
+  if(stacks[startStack].length > 0 && stacks[endStack].length == 0) {
+    return true;
+  }
+  else if (stacks[startStack][stacks[startStack].length -1] < stacks[endStack][stacks[endStack].length -1]){
+    return true;
+  } 
+  else {return false}
 }
+
+// const isLegal = (start, destination) => {
+//   if([stacks[start].length-1] > 0 &&  [stacks[destination].length] == 0) {
+//     return true;
+//   }
+//   else if ([stacks[start]] < [stacks[destination]]){
+//     return true;
+//   } 
+//   else {return false}
+// }
+let winningLength = 4;
 
 // What is a win in Towers of Hanoi? When should this function run?
 const checkForWin = () => {
-  // Your code here
-
+  if(stacks.b.length == winningLength || stacks.c.length == winningLength)
+    return true
+  else 
+    return false  
 }
 
 // When is this function called? What should it do with its argument?
 const towersOfHanoi = (startStack, endStack) => {
   // Your code here
-
+  movePiece(startStack, endStack);
 }
 
 const getPrompt = () => {
